@@ -49,6 +49,10 @@ void compare_hist_vectors(const vector<LuvColorHistogram>& h1, const vector<LuvC
 	}
 }
 
+bool pairCompare(const pair<double, string>& firstElem, const pair<double, string>& secondElem) {
+  return firstElem.first < secondElem.first;
+}
+
 int main(int argc, const char* argv[]) {
 
 	if (argc < 3){
