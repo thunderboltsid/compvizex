@@ -26,9 +26,10 @@ void load(path& p, vector<LuvColorHistogram>& hist_vector){
 	directory_iterator it(p);
 	//directory_iterator end_it;
 	for(auto& entry : boost::make_iterator_range(directory_iterator(p), {})){
-            std::cout << entry << "\n";
+            std::cout << entry.path().string() << "\n";
 			LuvColorHistogram hist;
-			hist_vector.push_back(hist.load(entry.path().string(), false));
+			hist.load(entry.path().string(), false);
+			hist_vector.push_back(hist);
 	}
 
 }
@@ -43,8 +44,8 @@ void compare_hist_vectors(const vector<LuvColorHistogram>& h1, const vector<LuvC
 		// Fill-in: iterate over h2 and compare it1 and it2
                 // For each histogram in h1, find the closest two in h2.
                 // Ideally, you should also show the corresponding images, or at least the file-names for quick verification.
-		std::cout << (*it1).compare(*it2) <<std::endl;
-		
+		std::cout << (*it1).LuvColorHistogram::compare(*it2) <<std::endl;
+		//std::cout << (*it1)._hist.depth() << std::endl;
 	}
 }
 

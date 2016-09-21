@@ -148,6 +148,7 @@ class LuvColorHistogram {
 		//		unsigned int nr_bins_l, unsigned int nr_bins_u, unsigned int nr_bins_v);
 
 	protected:
+	//public:
 		int _histSize[3];
 		float _l_ranges[2];
 		float _u_ranges[2];
