@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -51,6 +53,11 @@ void compare_hist_vectors(const vector<LuvColorHistogram>& h1, const vector<LuvC
 
 bool pairCompare(const pair<double, string>& firstElem, const pair<double, string>& secondElem) {
   return firstElem.first < secondElem.first;
+}
+
+inline bool file_exists (const std::string& name) {
+    ifstream f(name.c_str());
+    return f.good();
 }
 
 int main(int argc, const char* argv[]) {
