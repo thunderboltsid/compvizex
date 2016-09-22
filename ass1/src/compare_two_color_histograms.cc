@@ -88,15 +88,14 @@ int main(int argc, const char* argv[]) {
 		result[i].first = hist_origin.compare(histogram_train[i]);
 	}
 	sort(result.begin(), result.end(), pairCompare);
-
+	cv::Mat orig_img = cv::imread(argv[1]);
+	cv::imshow("Origin image", orig_img);
 	cv::Mat img1 = cv::imread(result[0].second);
 	cv::imshow("First match", img1);
 	cout << result[0].second << endl;
 	cv::Mat img2 = cv::imread(result[1].second);
 	cv::imshow("Second match", img2);
 	cout << result[1].second << endl;
-
-	cout<< endl<< endl;
-
-
+	cv::waitKey(0);
+	return 0;
 }
