@@ -71,7 +71,7 @@ int main(int argc, const char* argv[]) {
 	}
 
 	if(!file_exists(argv[1])) {
-		cout << "The file " << argv[1] <<" does not exist";
+		cerr << "The file " << argv[1] <<" does not exist" << endl;
 	return -1;
 	}
 
