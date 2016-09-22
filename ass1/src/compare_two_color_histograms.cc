@@ -59,16 +59,19 @@ bool pairCompare(const pair<double, string>& firstElem, const pair<double, strin
 }
 
 inline bool file_exists (const std::string& name) {
-    ifstream f(name.c_str());
+    std::ifstream f(name.c_str());
     return f.good();
 }
 
 int main(int argc, const char* argv[]) {
 
 	if (argc < 3){
-		cerr<< "Usage: \n"<< argv[0]<< " [folder name train] [folder name test]"<< endl;
+		cerr<< "Usage: \n"<< argv[0]<< " [original image] [folder path test]"<< endl;
 		return -1;
 	}
+
+	if(!file_exists(argv[1]))
+	return -1;
 
 	vector<pair<double, string> > result;
 	LuvColorHistogram hist_origin;
