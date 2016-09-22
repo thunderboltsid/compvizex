@@ -70,8 +70,10 @@ int main(int argc, const char* argv[]) {
 		return -1;
 	}
 
-	if(!file_exists(argv[1]))
+	if(!file_exists(argv[1])) {
+		cout << "The file " << argv[1] <<" does not exist";
 	return -1;
+	}
 
 	vector<pair<double, string> > result;
 	LuvColorHistogram hist_origin;
