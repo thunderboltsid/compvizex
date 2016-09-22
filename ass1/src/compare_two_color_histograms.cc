@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <boost/filesystem.hpp>
+#include <boost/range/iterator_range.hpp>
 #include "luv_color_histogram.hh"
 
 using namespace std;
@@ -23,8 +24,13 @@ bool verify_folder(path& p){
 
 void load(path& p, vector<LuvColorHistogram>& hist_vector){
 	directory_iterator it(p);
-	directory_iterator end_it;
-        // Fill-in
+	//directory_iterator end_it;
+	for(auto& entry : boost::make_iterator_range(directory_iterator(p), {})){
+            std::cout << entry << "\n";
+			LuvColorHistogram hist;
+			hist_vector.push_back(hist.load(entry.path().string(), false));
+	}
+
 }
 
 void compare_hist_vectors(const vector<LuvColorHistogram>& h1, const vector<LuvColorHistogram>& h2){
@@ -37,28 +43,35 @@ void compare_hist_vectors(const vector<LuvColorHistogram>& h1, const vector<LuvC
 		// Fill-in: iterate over h2 and compare it1 and it2
                 // For each histogram in h1, find the closest two in h2.
                 // Ideally, you should also show the corresponding images, or at least the file-names for quick verification.
+		std::cout << (*it1).compare(*it2) <<std::endl;
 		
 	}
 }
 
 int main(int argc, const char* argv[]) {
 
-	if (argc < 2){
-		cerr<< "Usage: \n"<< argv[0]<< " [folder name]"<< endl;
+	if (argc < 3){
+		cerr<< "Usage: \n"<< argv[0]<< " [folder name train] [folder name test]"<< endl;
 		return -1;
 	}
 
 	path p (argv[1]);
 	if (!verify_folder(p)) return -1;
 
+	path q (argv[2]);
+	if (!verify_folder(q)) return -1;
 
-	vector<LuvColorHistogram> histograms;
 
-	load(p, histograms);
-	cout<< "*** loaded "<< histograms.size()<< " samples."<< endl;
+	vector<LuvColorHistogram> histogram_train;
+	vector<LuvColorHistogram> histogram_test;
+
+	load(p, histogram_train);
+	load(q, histogram_test);
+	cout<< "*** loaded "<< histogram_train.size()<< " train samples."<< endl;
+	cout<< "*** loaded "<< histogram_test.size()<< " test samples."<<endl;
 
 	cout<< "Comparing histograms"<< endl;
-	compare_hist_vectors(histograms, histograms);
+	compare_hist_vectors(histogram_train, histogram_test);
 
 	cout<< endl<< endl;
 
