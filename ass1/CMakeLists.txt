@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project( color_histograms )
+add_compile_options(-std=c++11)
 
 # Removed Eigen dependency for now.
 #find_package(PkgConfig)
