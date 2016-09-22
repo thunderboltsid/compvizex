@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/range/iterator_range.hpp>
 #include "luv_color_histogram.hh"
+#include <algorithm>
 
 using namespace std;
 using namespace jir;
@@ -83,15 +84,17 @@ int main(int argc, const char* argv[]) {
 	cout<< "Comparing histograms"<< endl;
 	//compare_hist_vectors(histogram_train, histogram_test);
 	
-	for(int i = 0; i < histogram_train; i++){
+	for(int i = 0; i < histogram_train.size(); i++){
 		result[i].first = hist_origin.compare(histogram_train[i]);
 	}
-	result.sort();
+	sort(result.begin(), result.end(), pairCompare);
 
-	Mat img1 = imread(result[0].second);
-	imshow("First match", img1);
-	Mat img2 = imread(result[1].second);
-	imshow("Second match", img2);
+	cv::Mat img1 = cv::imread(result[0].second);
+	cv::imshow("First match", img1);
+	cout << result[0].second << endl;
+	cv::Mat img2 = cv::imread(result[1].second);
+	cv::imshow("Second match", img2);
+	cout << result[1].second << endl;
 
 	cout<< endl<< endl;
 
