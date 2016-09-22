@@ -24,11 +24,13 @@ bool verify_folder(path& p){
 	return true;
 }
 
-void load(path& p, vector<LuvColorHistogram>& hist_vector){
+void load(path& p, vector<LuvColorHistogram>& hist_vector, 
+			vector<pair<double, string> > &result){
 	directory_iterator it(p);
 	//directory_iterator end_it;
 	for(auto& entry : boost::make_iterator_range(directory_iterator(p), {})){
             std::cout << entry.path().string() << "\n";
+			result.push_back(pair<double, string>(0, entry.path().string()));
 			LuvColorHistogram hist;
 			hist.load(entry.path().string(), false);
 			hist_vector.push_back(hist);
@@ -67,23 +69,29 @@ int main(int argc, const char* argv[]) {
 		return -1;
 	}
 
-	path p (argv[1]);
-	if (!verify_folder(p)) return -1;
+	vector<pair<double, string> > result;
+	LuvColorHistogram hist_origin;
+	hist_origin.load(argv[1], false);
 
 	path q (argv[2]);
 	if (!verify_folder(q)) return -1;
 
 
 	vector<LuvColorHistogram> histogram_train;
-	vector<LuvColorHistogram> histogram_test;
-
-	load(p, histogram_train);
-	load(q, histogram_test);
-	cout<< "*** loaded "<< histogram_train.size()<< " train samples."<< endl;
-	cout<< "*** loaded "<< histogram_test.size()<< " test samples."<<endl;
+	load(q, histogram_train, result);
 
 	cout<< "Comparing histograms"<< endl;
-	compare_hist_vectors(histogram_train, histogram_test);
+	//compare_hist_vectors(histogram_train, histogram_test);
+	
+	for(int i = 0; i < histogram_train; i++){
+		result[i].first = hist_origin.compare(histogram_train[i]);
+	}
+	result.sort();
+
+	Mat img1 = imread(result[0].second);
+	imshow("First match", img1);
+	Mat img2 = imread(result[1].second);
+	imshow("Second match", img2);
 
 	cout<< endl<< endl;
 
