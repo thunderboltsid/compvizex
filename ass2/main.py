@@ -36,7 +36,13 @@ class Dataset(object):
         return len(self.points)
 
     def mean(self) -> Point:
-        pass
+        mean_x = sum([point.x for point in self.points]) / len(
+                [point.x for point in self.points])
+        mean_y = sum([point.y for point in self.points]) / len(
+                [point.y for point in self.points])
+        mean_z = sum([point.z for point in self.points]) / len(
+                [point.z for point in self.points])
+        return Point(mean_x, mean_y, mean_z)
 
     def __getitem__(self, item):
         return self.points[item]
@@ -44,7 +50,8 @@ class Dataset(object):
 
 def main(filename: str) -> int:
     file_content = Dataset(filename)
-    import pdb; pdb.set_trace()
+    import pdb;
+    pdb.set_trace()
     return 0
 
 
