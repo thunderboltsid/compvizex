@@ -1,20 +1,55 @@
+import sys
+
+
+class Vector(object):
+    def __init__(self, x: float, y: float, z: float):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    @property
+    def magnitude(self) -> float:
+        yield
+
+    @property
+    def direction(self) -> float:
+        yield
+
+
 class Point(object):
-    def __init__(self, wsv):
-        elems = [elem for elem in wsv.split(" ")]
-        self.x = elems[0]
-        self.y = elems[1]
-        self.z = elems[2]
+    def __init__(self, x: float, y: float, z: float):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def vector(self) -> Vector:
+        return Vector(self.x, self.y, self.z)
 
 
-def read_file(filename):
-    with open(filename) as f:
-        return [Point(line) for line in
-                f.read().decode('utf-8').split("\n")[1:-1]]
+class Dataset(object):
+    def __init__(self, filename: str):
+        with open(filename) as f:
+            self.points = [Point(*[float(point) for point in line.split(" ")])
+                           for line in f.read().split("\n")[1:-1]]
+
+    def __len__(self) -> int:
+        return len(self.points)
+
+    def mean(self) -> Point:
+        pass
+
+    def __getitem__(self, item):
+        return self.points[item]
 
 
-def main():
-    file_content = read_file("dataset.txt")
+def main(filename: str) -> int:
+    file_content = Dataset(filename)
+    import pdb; pdb.set_trace()
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 2:
+        main(sys.argv[1])
+    else:
+        raise Exception("Usage: main.py dataset.txt")
