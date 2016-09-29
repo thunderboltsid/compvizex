@@ -6,3 +6,5 @@ CMakeFiles/
 Makefile
 cmake_install.cmake
 compare_two_color_histograms
+env/
+.python-version
