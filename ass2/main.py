@@ -1,33 +1,23 @@
 import sys
-
-
-class Vector(object):
-    def __init__(self, x: float, y: float, z: float):
-        self.x = x
-        self.y = y
-        self.z = z
-
-    @property
-    def magnitude(self) -> float:
-        yield
-
-    @property
-    def direction(self) -> float:
-        yield
+import math
+import numpy
 
 
 class Point(object):
-    def __init__(self, x: float, y: float, z: float):
+    def __init__(self, x: float, y: float, z: float) -> None:
         self.x = x
         self.y = y
         self.z = z
 
-    def vector(self) -> Vector:
-        return Vector(self.x, self.y, self.z)
+    def __sub__(self, other):
+        x = self.x - other.x
+        y = self.y - other.y
+        z = self.z - other.z
+        return Point(x, y, z)
 
 
 class Dataset(object):
-    def __init__(self, filename: str):
+    def __init__(self, filename: str) -> None:
         with open(filename) as f:
             self.points = [Point(*[float(point) for point in line.split(" ")])
                            for line in f.read().split("\n")[1:-1]]
@@ -35,6 +25,7 @@ class Dataset(object):
     def __len__(self) -> int:
         return len(self.points)
 
+    @property
     def mean(self) -> Point:
         mean_x = sum([point.x for point in self.points]) / len(
                 [point.x for point in self.points])
@@ -48,15 +39,25 @@ class Dataset(object):
         return self.points[item]
 
 
-def main(filename: str) -> int:
-    file_content = Dataset(filename)
-    import pdb;
-    pdb.set_trace()
-    return 0
+def main(filename: str) -> None:
+    points = Dataset(filename)
+    mean = points.mean
+    S = numpy.zeros((3, 3))
+    for idx, point in enumerate(points.points):
+        points.points[idx] = point - mean
+        arr = numpy.array([points.points[idx:idx + 1][0].x,
+                           points.points[idx:idx + 1][0].y,
+                           points.points[idx:idx + 1][0].z])
+        S += numpy.dot(arr.T, arr)
+    (eigenvalue, eigenvector) = numpy.linalg.eig(S)
+    minimal_eigenvector = eigenvector[:, numpy.argmin(eigenvalue)]
+    dot_product = numpy.dot(minimal_eigenvector.T,
+                            numpy.array([mean.x, mean.y, mean.z]))
+    print(dot_product)
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         main(sys.argv[1])
     else:
-        raise Exception("Usage: main.py dataset.txt")
+        raise Exception("Usage: main.py filename.txt")
