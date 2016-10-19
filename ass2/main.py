@@ -45,14 +45,15 @@ def main(filename: str) -> None:
     S = numpy.zeros((3, 3))
     for idx, point in enumerate(points.points):
         points.points[idx] = point - mean
-        arr = numpy.array([points.points[idx:idx + 1][0].x,
+        arr = numpy.array([[points.points[idx:idx + 1][0].x,
                            points.points[idx:idx + 1][0].y,
-                           points.points[idx:idx + 1][0].z])
+                           points.points[idx:idx + 1][0].z]])
         S += numpy.dot(arr.T, arr)
     (eigenvalue, eigenvector) = numpy.linalg.eig(S)
     minimal_eigenvector = eigenvector[:, numpy.argmin(eigenvalue)]
     dot_product = numpy.dot(minimal_eigenvector.T,
                             numpy.array([mean.x, mean.y, mean.z]))
+    import pdb; pdb.set_trace()
     print(dot_product)
 
 
