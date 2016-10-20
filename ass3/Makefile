@@ -13,3 +13,4 @@ test:
 
 clean:
 	rm -f *.o
+	rm -f result/*
