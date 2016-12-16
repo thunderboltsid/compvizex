@@ -145,49 +145,9 @@ int main(int argc, const char *argv[]) {
     Mat W = model->getMat("eigenvectors");
     // Get the sample mean from the training data
     Mat mean = model->getMat("mean");
-    // Display or save:
-    if(argc == 2) {
-        imshow("mean", norm_0_255(mean.reshape(1, images[0].rows)));
-    } else {
-        imwrite(format("%s/mean.png", output_folder.c_str()), norm_0_255(mean.reshape(1, images[0].rows)));
-    }
-    // Display or save the Eigenfaces:
-    for (int i = 0; i < min(10, W.cols); i++) {
-        string msg = format("Eigenvalue #%d = %.5f", i, eigenvalues.at<double>(i));
-        cout << msg << endl;
-        // get eigenvector #i
-        Mat ev = W.col(i).clone();
-        // Reshape to original size & normalize to [0...255] for imshow.
-        Mat grayscale = norm_0_255(ev.reshape(1, height));
-        // Show the image & apply a Jet colormap for better sensing.
-        Mat cgrayscale;
-        applyColorMap(grayscale, cgrayscale, COLORMAP_JET);
-        // Display or save:
-        if(argc == 2) {
-            imshow(format("eigenface_%d", i), cgrayscale);
-        } else {
-            imwrite(format("%s/eigenface_%d.png", output_folder.c_str(), i), norm_0_255(cgrayscale));
-        }
-    }
 
-    // Display or save the image reconstruction at some predefined steps:
-    for(int num_components = min(W.cols, 10); num_components < min(W.cols, 300); num_components+=15) {
-        // slice the eigenvectors from the model
-        Mat evs = Mat(W, Range::all(), Range(0, num_components));
-        Mat projection = subspaceProject(evs, mean, images[0].reshape(1,1));
-        Mat reconstruction = subspaceReconstruct(evs, mean, projection);
-        // Normalize the result:
-        reconstruction = norm_0_255(reconstruction.reshape(1, images[0].rows));
-        // Display or save:
-        if(argc == 2) {
-            imshow(format("eigenface_reconstruction_%d", num_components), reconstruction);
-        } else {
-            imwrite(format("%s/eigenface_reconstruction_%d.png", output_folder.c_str(), num_components), reconstruction);
-        }
-    }
-    // Display if we are not writing to an output folder:
-    if(argc == 2) {
-        waitKey(0);
-    }
+    cout << model->getLabelInfo(predictedLabel) << endl;
+    cout << model->getLabelInfo(testLabel) << endl;
+
     return 0;
 }
